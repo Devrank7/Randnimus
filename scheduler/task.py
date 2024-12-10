@@ -3,6 +3,7 @@ from abc import ABC
 
 from aiogram import Bot
 
+from api.keyboards.buttons import button_chat
 from db.sql.service import run_sql, UpdateUser, DeleteConnection, DeleteConnectionById
 
 
@@ -21,8 +22,8 @@ class Disconnect(Task):
     async def run(self):
         connection = await run_sql(DeleteConnectionById(self.connection_id))
         text = "Соединение перервано!"
-        await self.bot.send_message(connection.first_user_id, text)
-        await self.bot.send_message(connection.second_user_id, text)
+        await self.bot.send_message(connection.first_user_id, text, reply_markup=button_chat)
+        await self.bot.send_message(connection.second_user_id, text, reply_markup=button_chat)
 
 
 class TakeOutVIP(Task):

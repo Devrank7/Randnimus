@@ -5,7 +5,8 @@ from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
 from db.sql.connect import init_db
-from routers import start_router, settings_router, vip_router, chat_settings, chat_router
+from routers import start_router, settings_router, vip_router, chat_settings, chat_router, user_location_handler, \
+    register_age_or_sex_router
 from scheduler.scheduler import scheduler
 
 load_dotenv()
@@ -17,6 +18,8 @@ routers = [
     vip_router.router,
     chat_settings.router,
     chat_router.router,
+    user_location_handler.router,
+    register_age_or_sex_router.router
 ]
 
 

@@ -49,7 +49,7 @@ async def router_message(query: CallbackQuery):
     age = int(query.data.split("_")[1])
     await run_sql(UpdateUser(query.from_user.id, age=age))
     await query.answer(f"Возраст изменен на {age}!", show_alert=True)
-    await query.message.answer("Вибирете что нужно изменить: ", reply_markup=settings_button)
+    await query.message.answer("Виберете что нужно изменить: ", reply_markup=settings_button)
 
 
 @router.message(F.text == 'Мой профиль!')

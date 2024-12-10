@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 
 from db.sql.connect import AsyncSessionMaker
 from db.sql.enum.enums import Sex, ChatSettingsSex
-from db.sql.model import Users, ChatSettings, Connection
+from db.sql.model import Users, ChatSettings, Connection, Location
 
 
 class SqlService(ABC):
@@ -23,17 +23,21 @@ class ReadUser(SqlService):
     async def run(self):
         async with AsyncSessionMaker() as session:
             user = await session.scalar(select(Users).where(Users.tg_id == literal_column(str(self.tg_id)))
-                                        .options(joinedload(Users.chat_settings)))
+                                        .options(joinedload(Users.chat_settings), joinedload(Users.location)))
             return user
 
 
 class CreateUser(SqlService):
-    def __init__(self, tg_id: int):
+    def __init__(self, tg_id: int, username: str, first_name: str, last_name: str):
         self.tg_id = tg_id
+        self.username = username
+        self.first_name = first_name
+        self.last_name = last_name
 
     async def run(self):
         async with AsyncSessionMaker() as session:
-            new_user = Users(tg_id=self.tg_id)
+            new_user = Users(tg_id=self.tg_id, username=self.username, first_name=self.first_name,
+                             last_name=self.last_name)
             chat_settings = ChatSettings(user_id=new_user.tg_id)
             session.add(new_user)
             session.add(chat_settings)
@@ -80,6 +84,21 @@ class AllUsers(SqlService):
         async with AsyncSessionMaker() as session:
             users_scalar = await session.scalars(select(Users))
             return users_scalar.all()
+
+
+class AttachLocation(SqlService):
+
+    def __init__(self, tg_id: int, latitude: float, longitude: float):
+        self.tg_id = tg_id
+        self.latitude = latitude
+        self.longitude = longitude
+
+    async def run(self):
+        async with AsyncSessionMaker() as session:
+            location = Location(latitude=self.latitude, longitude=self.longitude)
+            location.user_id = self.tg_id
+            session.add(location)
+            await session.commit()
 
 
 class UpdateChatSettings(SqlService):

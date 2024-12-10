@@ -19,3 +19,6 @@ button_chat = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="Начать чат")],
     [KeyboardButton(text="Настройки")]
 ], resize_keyboard=True)
+location_button = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text="Дать локации", request_location=True)]
+])

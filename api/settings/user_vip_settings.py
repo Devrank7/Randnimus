@@ -16,10 +16,10 @@ PROVIDER_TOKEN = os.getenv('PAYMENT_KEY')
 async def prepare_invoice(message: Message):
     await message.answer_invoice(
         title=f"VIP на 7 дней!",
-        description="Вы получите много приколюх",
+        description="Вы сможете видеть данные пользователя при общении, Имя, Возраст, Пол!!!",
         payload="invoice",
         currency="USD",
-        prices=[LabeledPrice(amount=20, label="VIP")],
+        prices=[LabeledPrice(amount=1000, label="VIP")],
         provider_token=PROVIDER_TOKEN,
     )
 
