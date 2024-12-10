@@ -24,7 +24,7 @@ class ChatSettings(Base):
     sex = Column(Enum(ChatSettingsSex), default=ChatSettingsSex.ANY)
     min_age = Column(Integer, nullable=False, default=0)
     max_age = Column(Integer, nullable=False, default=140)
-    user_id = Column(Integer, ForeignKey('users.tg_id'), unique=True, nullable=False)
+    user_id = Column(BigInteger, ForeignKey('users.tg_id'), unique=True, nullable=False)
     user = relationship("Users", back_populates="chat_settings")
     __table_args__ = (UniqueConstraint('user_id', name='unique_user_chat_settings'),)
 
@@ -35,5 +35,9 @@ class ChatSettings(Base):
 class Connection(Base):
     __tablename__ = 'connection'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    first_user_id = Column(Integer, nullable=False)
-    second_user_id = Column(Integer, nullable=False)
+    first_user_id = Column(BigInteger, nullable=False, default=-1)
+    second_user_id = Column(BigInteger, nullable=False, default=-1)
+
+    def __str__(self):
+        return f"Id {self.id}, \n first_user_id: {self.first_user_id}, \n second_user_id: {self.second_user_id}"
+

@@ -3,10 +3,9 @@ import os
 
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
-from liqpay.liqpay import LiqPay
 
 from db.sql.connect import init_db
-from routers import start_router, settings_router, vip_router, chat_settings
+from routers import start_router, settings_router, vip_router, chat_settings, chat_router
 from scheduler.scheduler import scheduler
 
 load_dotenv()
@@ -16,7 +15,8 @@ routers = [
     start_router.router,
     settings_router.router,
     vip_router.router,
-    chat_settings.router
+    chat_settings.router,
+    chat_router.router,
 ]
 
 

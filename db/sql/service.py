@@ -113,9 +113,11 @@ class ReadConnection(SqlService):
     async def run(self):
         async with AsyncSessionMaker() as session:
             connection = await session.scalar(
-                select(Connection).where((Connection.first_user_id == literal_column(
-                    str(self.tg_id)) or Connection.second_user_id == literal_column(str(self.tg_id))))
+                select(Connection).where(or_(Connection.first_user_id == literal_column(
+                    str(self.tg_id)), Connection.second_user_id == literal_column(str(self.tg_id))))
             )
+            if connection is None:
+                return None, -1, -1
             return connection, connection.first_user_id or -1, connection.second_user_id or -1
 
 
@@ -126,11 +128,12 @@ class ConnectConnection(SqlService):
     async def run(self):
         async with AsyncSessionMaker() as session:
             connection = await session.scalar(
-                select(Connection).where(or_(Connection.first_user_id == literal_column(str(self.tg_id)),
-                                             Connection.second_user_id == literal_column(str(self.tg_id)))))
-            if connection.first_user_id is None:
+                select(Connection).where(or_(Connection.first_user_id != -1,
+                                             Connection.second_user_id != 1)))
+            print('Conn, ', connection)
+            if connection.first_user_id == -1:
                 connection.first_user_id = self.tg_id
-            elif connection.second_user_id is None:
+            elif connection.second_user_id == -1:
                 connection.second_user_id = self.tg_id
             await session.commit()
 
@@ -172,14 +175,16 @@ class FindHalfConnectionOrCreate(SqlService):
         async with AsyncSessionMaker() as session:
             query = select(Connection).where(
                 or_(
-                    and_(Connection.first_user_id == self.tg_id, Connection.second_user_id is None),
-                    and_(Connection.second_user_id == self.tg_id, Connection.first_user_id is None)
+                    and_(Connection.first_user_id != -1, Connection.second_user_id == -1),
+                    and_(Connection.second_user_id != -1, Connection.first_user_id == -1)
                 )
             )
         result = await session.execute(query)
         sc = result.scalars().all()
-        if not len(sc) == 0:
-            return result.scalars().all()[0], True
+        print(f"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ::: {sc}")
+        print(f"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ::: {sc}")
+        if len(sc) != 0:
+            return sc[0], True
         connection = Connection(first_user_id=self.tg_id)
         session.add(connection)
         await session.commit()

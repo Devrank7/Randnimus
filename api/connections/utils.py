@@ -13,6 +13,6 @@ def prepare_id(message: Message, first_user_id, second_user_id):
 
 async def check_and_notify_connect(message: Message) -> bool:
     connect, first_user_id, second_user_id = await run_sql(ReadConnection(message.from_user.id))
-    if first_user_id and second_user_id:
+    if first_user_id != -1 and second_user_id != -1:
         await message.answer("Вы уже связанны с другим человеком!")
-    return first_user_id and second_user_id
+    return first_user_id != -1 and second_user_id != -1
