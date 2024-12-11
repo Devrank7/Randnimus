@@ -15,7 +15,7 @@ router.message.middleware(AuthMiddleware())
 
 @router.message(F.text == 'Настройки')
 async def router_message(message: Message):
-    await message.answer("Вибирете что нужно изменить: ", reply_markup=settings_button)
+    await message.answer("Вибирете что нужно изменить👌: ", reply_markup=settings_button)
 
 
 @router.message(F.text.startswith("Изменить"))
@@ -25,7 +25,7 @@ async def router_message(message: Message):
         case "Пол":
             await change_sex(message)
         case "Возраст":
-            await message.answer("Выберете возраст: ", reply_markup=change_age_markup(0, 36))
+            await message.answer("Выберете возраст👴: ", reply_markup=change_age_markup(0, 36))
         case "VIP":
             await prepare_invoice(message)
         case _:
@@ -41,7 +41,7 @@ async def router_message(query: CallbackQuery):
 async def router_message(query: CallbackQuery):
     markup = change_age_markup(int(query.data.split("_")[1]), int(query.data.split("_")[2]))
     await query.answer("Выберете возраст!")
-    await query.message.edit_text(text="Выберете возраст!", reply_markup=markup)
+    await query.message.edit_text(text="Выберете возраст👷‍♂️!", reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("age_"))
@@ -49,7 +49,7 @@ async def router_message(query: CallbackQuery):
     age = int(query.data.split("_")[1])
     await run_sql(UpdateUser(query.from_user.id, age=age))
     await query.answer(f"Возраст изменен на {age}!", show_alert=True)
-    await query.message.answer("Виберете что нужно изменить: ", reply_markup=settings_button)
+    await query.message.answer("Виберете что нужно изменить👌: ", reply_markup=settings_button)
 
 
 @router.message(F.text == 'Мой профиль!')

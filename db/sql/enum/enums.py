@@ -4,7 +4,7 @@ from enum import Enum
 class Sex(Enum):
     MALE = 1
     FEMALE = 2
-    UNKNOWN = 0
+    UNKNOWN = 3
 
 
 class ChatSettingsSex(Enum):

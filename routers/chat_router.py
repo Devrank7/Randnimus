@@ -35,10 +35,10 @@ async def disconnect(message: Message):
         connect_data = prepare_id(message, connect.first_user_id, connect.second_user_id)
         consumer = connect_data['consumer']
         if consumer != -1:
-            await message.bot.send_message(consumer, "Пользователь отключился от вас!",
+            await message.bot.send_message(consumer, "Пользователь отключился от вас!👋",
                                            reply_markup=button_chat)
         return
-    await message.answer("Вы итак были отключены!", reply_markup=button_chat)
+    await message.answer("Вы итак были отключены! 👀", reply_markup=button_chat)
 
 
 @router.message(F.text)
@@ -48,6 +48,6 @@ async def bot_reader_connect(message: Message):
         scheduler.reschedule_job(job_id=f"connect_{connect.id}",
                                  trigger=DateTrigger(run_date=datetime.datetime.now() + datetime.timedelta(minutes=2)))
         prepare_dict = prepare_id(message, first_user_id, second_user_id)
-        await message.bot.send_message(prepare_dict['consumer'], f"Аноним: {message.text}")
+        await message.bot.send_message(prepare_dict['consumer'], f"🗣️ Аноним: {message.text}")
     else:
         print("Connect not found!")
