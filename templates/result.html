@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            background: #fff;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4CAF50;
+        }
+
+        .profile-header h1 {
+            margin-top: 10px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .profile-details {
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .profile-details strong {
+            color: #555;
+        }
+
+        .vip-status {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .profile-section {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img src="{{ url_photo }}" alt="Фото пользователя">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <p>@{{ user.username }}</p>
+    </div>
+
+    <div class="profile-details">
+        <div class="profile-section">
+            <strong>ID пользователя:</strong> {{ user.id }}
+        </div>
+        <div class="profile-section">
+            <strong>Telegram ID:</strong> {{ user.tg_id }}
+        </div>
+        <div class="profile-section">
+            <strong>Пол:</strong> {{ user.sex.name }}
+        </div>
+        <div class="profile-section">
+            <strong>Возраст:</strong> {{ user.age }}
+        </div>
+        <div class="profile-section">
+            <strong>VIP статус:</strong>
+            {% if user.is_vip %}
+                <span class="vip-status">Да</span>
+            {% else %}
+                Нет
+            {% endif %}
+        </div>
+        {% if user.chat_settings %}
+            <div class="profile-section">
+                <h3>Настройки чата</h3>
+                <strong>Предпочтительный пол собеседника:</strong> {{ user.chat_settings.sex.name }}<br>
+                <strong>Возрастной диапазон:</strong> {{ user.chat_settings.min_age }}
+                - {{ user.chat_settings.max_age }}
+            </div>
+        {% endif %}
+        {% if user.location %}
+            <div class="profile-section">
+                <h3>Местоположение</h3>
+                <strong>Точное местоположение: </strong> {{ location }}<br>
+                <strong>Широта:</strong> {{ user.location.latitude }}<br>
+                <strong>Долгота:</strong> {{ user.location.longitude }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

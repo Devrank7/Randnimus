@@ -22,7 +22,7 @@ async def perpose(message: Message):
 
 @router.message(F.text == "Поменять подходящий пол")
 async def chat_settings(message: Message):
-    markup = EnumKeyboardMarkup(ChatSettingsSex, "chs_", name_func=lambda el: translate(el.value))
+    markup = EnumKeyboardMarkup(ChatSettingsSex, "chs_", name_func=lambda el: translate.get(el.value))
     await message.answer("Выбери подходящий тебе пол ♂️: ", reply_markup=markup.as_keyboard_markup())
 
 

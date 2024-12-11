@@ -1,5 +1,6 @@
 from aiogram import Router, F
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery, InlineKeyboardMarkup, \
+    InlineKeyboardButton, WebAppInfo
 
 from api.keyboards.buttons import settings_button
 from api.settings.user_age_settings import change_age_markup
@@ -54,4 +55,8 @@ async def router_message(query: CallbackQuery):
 
 @router.message(F.text == 'Мой профиль!')
 async def router_message(message: Message, user: Users):
-    await message.answer(user.__str__())
+    button = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Мой профиль!",
+                              web_app=WebAppInfo(url=f"https://locust-curious-dane.ngrok-free.app/profile/{user.tg_id}"))]
+    ])
+    await message.answer("Вот твой профиль 😎⬇ ", reply_markup=button)

@@ -8,27 +8,27 @@ from db.sql.service import run_sql, UpdateUser
 
 
 async def change_sex(message: Message, text: str = "Выберете пол 👀", prefix: str = "sex_"):
-    markup = EnumKeyboardMarkup(Sex, prefix, name_func=lambda el: translate(el.value))
+    markup = EnumKeyboardMarkup(Sex, prefix, name_func=lambda el: translate.get(el.value))
     await message.answer(text, reply_markup=markup.as_keyboard_markup())
 
 
 async def change_query_sex(query: CallbackQuery):
     sex = query.data.split("_")[1]
-    match sex.lower():
-        case "male":
+    match int(sex):
+        case 1:
             await run_sql(UpdateUser(query.from_user.id, Sex.MALE))
             await query.answer("Male")
-            await query.message.answer("Ваш пол изменен на мужской👳‍♂️")
-        case "female":
+            await query.message.edit_text("Ваш пол изменен на мужской👳‍♂️")
+        case 2:
             await run_sql(UpdateUser(query.from_user.id, Sex.FEMALE))
             await query.answer("Female")
-            await query.message.answer("Ваш пол изменен на женский👩‍🦳")
-        case "unknown":
+            await query.message.edit_text("Ваш пол изменен на женский👩‍🦳")
+        case 3:
             await run_sql(UpdateUser(query.from_user.id, Sex.UNKNOWN))
             await query.answer("Unknown")
-            await query.message.answer("Ваш пол изменен на необозначенный🕵️")
+            await query.message.edit_text("Ваш пол изменен на необозначенный🕵️")
         case _:
-            await query.answer("Not found!", show_alert=True)
+            await query.answer(f"Not found! {sex.lower()}", show_alert=True)
 
 
 async def change_or_register(query: CallbackQuery):
