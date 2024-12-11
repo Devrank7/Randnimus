@@ -26,13 +26,13 @@ class AuthMiddleware(BaseMiddleware):
                            event.from_user.username or f"user_{event.from_user.id}",
                            event.from_user.first_name or f"Не указано",
                            last_name))
-            await event.answer("Пожалуйста укажите место проживания!", reply_markup=location_button)
+            await event.answer("Пожалуйста укажите место проживания!👌", reply_markup=location_button)
             return
         if result.location is None:
-            await event.answer("Пожалуйста укажите место проживания!", reply_markup=location_button)
+            await event.answer("Пожалуйста укажите место проживания!👌", reply_markup=location_button)
             return
         if result.age == -1:
-            await event.answer("Укажите свой возраст!",
+            await event.answer("Укажите свой возраст!🥱",
                                reply_markup=change_age_markup(0, 36, prefix="sage_", pag_prefix="spag_"))
             return
         data['user'] = result

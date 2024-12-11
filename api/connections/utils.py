@@ -16,7 +16,7 @@ def prepare_id(message: Message, first_user_id, second_user_id):
 async def check_and_notify_connect(message: Message) -> bool:
     connect, first_user_id, second_user_id = await run_sql(ReadConnection(message.from_user.id))
     if first_user_id != -1 and second_user_id != -1:
-        await message.answer("Вы уже связанны с другим человеком!")
+        await message.answer("Вы уже связанны с другим человеком! 🤠")
     return first_user_id != -1 and second_user_id != -1
 
 
@@ -29,4 +29,4 @@ def get_info(user: Users, is_vip) -> str:
         text = f"Данные: Телеграм имя @{username}, \n Имя: {first_name}, \n Фамилия: {last_name}, \n " \
                f"Возраст {user.age}, \n Пол: {user.sex} \n Место проживания: {city}"
         return text
-    return "Если хотите узнать все данные об пользователе покупайте VIP"
+    return "Если хотите узнать все данные об пользователе покупайте VIP 💎"

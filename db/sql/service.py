@@ -186,8 +186,8 @@ class DeleteConnectionById(SqlService):
             return connect
 
 
-class FindHalfConnectionOrCreate(SqlService):
-    def __init__(self, tg_id: int):
+class FindConnectionByConditionOrCreate(SqlService):
+    def __init__(self, tg_id: int, ):
         self.tg_id = tg_id
 
     async def run(self):
@@ -200,10 +200,18 @@ class FindHalfConnectionOrCreate(SqlService):
             )
         result = await session.execute(query)
         sc = result.scalars().all()
-        print(f"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ::: {sc}")
-        print(f"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ::: {sc}")
         if len(sc) != 0:
-            return sc[0], True
+            for el in sc:
+                wait_user_id = el.first_user_id if el.second_user_id == -1 else el.second_user_id
+                wait_user = await session.scalar(select(Users).where(Users.tg_id == literal_column(str(wait_user_id)))
+                                                 .options(joinedload(Users.chat_settings)))
+                user = await session.scalar(select(Users).where(Users.tg_id == literal_column(str(self.tg_id)))
+                                            .options(joinedload(Users.chat_settings)))
+                if (wait_user.chat_settings.sex.value == user.sex.value) or wait_user.chat_settings.sex.value == 4:
+                    if wait_user.chat_settings.min_age < user.age < wait_user.chat_settings.max_age:
+                        if (user.chat_settings.sex.value == wait_user.sex.value) or user.chat_settings.sex.value == 4:
+                            if user.chat_settings.min_age < wait_user.age < user.chat_settings.max_age:
+                                return el, True
         connection = Connection(first_user_id=self.tg_id)
         session.add(connection)
         await session.commit()

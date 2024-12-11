@@ -12,17 +12,17 @@ router = Router()
 async def router_message(query: CallbackQuery):
     markup = change_age_markup(int(query.data.split("_")[1]), int(query.data.split("_")[2]), pag_prefix="spag_",
                                prefix="sage_")
-    await query.answer("Выберете возраст!")
-    await query.message.edit_text(text="Выберете возраст!", reply_markup=markup)
+    await query.answer("Выберете возраст🧒!")
+    await query.message.edit_text(text="Выберете возраст🧔!", reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("sage_"))
 async def router_message(query: CallbackQuery):
     age = int(query.data.split("_")[1])
     await run_sql(UpdateUser(query.from_user.id, age=age))
-    await query.answer(f"Возраст изменен на {age}!", show_alert=True)
+    await query.answer(f"Возраст изменен на {age}!👀", show_alert=True)
     await query.message.delete()
-    await change_sex(query.message, "Теперь выберете ваш пол", "ssex_")
+    await change_sex(query.message, "Теперь выберете ваш пол ♂️", "ssex_")
 
 
 @router.callback_query(F.data.startswith("ssex_"))
